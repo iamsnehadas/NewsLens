@@ -1,19 +1,16 @@
 import HomeInput from '@/components/home/HomeInput'
 import HeadlinesGrid from '@/components/home/HeadlinesGrid'
-import { NewsArticle, ApiResponse } from '@/types/api'
+import { NewsArticle } from '@/types/api'
 
 async function getHeadlines(): Promise<NewsArticle[]> {
   try {
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000'
-
-    const res = await fetch(`${baseUrl}/api/headlines`, {
-      next: { revalidate: 300 },
-    })
-    const json: ApiResponse<NewsArticle[]> = await res.json()
-    if (json.error || !json.data) return []
-    return json.data
+    const res = await fetch(
+      `https://newsapi.org/v2/top-headlines?country=us&pageSize=12&apiKey=${process.env.NEWSAPI_KEY}`,
+      { next: { revalidate: 300 } }
+    )
+    const json = await res.json()
+    if (json.status !== 'ok') return []
+    return json.articles
   } catch {
     return []
   }
