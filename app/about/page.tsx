@@ -20,7 +20,7 @@ export default function AboutPage() {
             <p>
               News Lens is a reading companion that adds a layer of critical context to news articles.
               Most people encounter news in a feed, skim a headline, and share or form an opinion in
-              under thirty seconds. This tool sits at that moment — helping you slow down and ask
+              under thirty seconds. This tool sits at that moment, helping you slow down and ask
               better questions before you act on what you read.
             </p>
           </div>
@@ -30,8 +30,8 @@ export default function AboutPage() {
             <p>
               News Lens does not determine whether an article is true or false. That is not a problem
               software can reliably solve. It is not a political bias detector, and it does not tell
-              you what to think. It surfaces signals — emotional language, missing sources, one-sided
-              framing — and lets you decide what to do with them.
+              you what to think. It surfaces signals (emotional language, missing sources, one-sided
+              framing etc.) and lets you decide what to do with them.
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function AboutPage() {
             <p>
               URL text extraction is unreliable — many news sites block it. If a URL does not work,
               paste the article text directly. Analysis quality varies on short articles and opinion
-              pieces. Results are not saved — every page reload starts fresh.
+              pieces. Results are not saved and every page reload starts fresh.
             </p>
           </div>
 

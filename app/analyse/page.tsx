@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GeminiAnalysisResponse } from '@/types/gemini'
 import { NewsArticle, ApiResponse } from '@/types/api'
@@ -12,7 +12,7 @@ import ErrorMessage from '@/components/ui/ErrorMessage'
 import Card from '@/components/ui/Card'
 import Link from 'next/link'
 
-export default function AnalysePage() {
+function AnalyseContent() {
   const searchParams = useSearchParams()
 
   const [analysis, setAnalysis] = useState<GeminiAnalysisResponse | null>(null)
@@ -73,8 +73,8 @@ export default function AnalysePage() {
       <div className="max-w-3xl mx-auto px-4 py-12">
 
         <div className="mb-8">
-          
-           <Link href="/"
+          <Link
+            href="/"
             className="text-xs text-gray-400 hover:text-gray-600 transition-colors mb-4 inline-block"
           >
             ← Back
@@ -107,5 +107,24 @@ export default function AnalysePage() {
 
       </div>
     </main>
+  )
+}
+
+export default function AnalysePage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gray-50">
+        <div className="max-w-3xl mx-auto px-4 py-12">
+          <div className="space-y-4">
+            <div className="h-4 bg-gray-200 rounded w-24 animate-pulse mb-8" />
+            <Card><Loader /></Card>
+            <Card><Loader /></Card>
+            <Card><Loader /></Card>
+          </div>
+        </div>
+      </main>
+    }>
+      <AnalyseContent />
+    </Suspense>
   )
 }
