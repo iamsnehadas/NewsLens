@@ -10,9 +10,9 @@ AI-powered news analysis and source intelligence.
 
 News Lens is a reading companion that adds a layer of critical context to news articles. Paste any article text and get three structured outputs:
 
-- **Credibility Signals** — flags emotional language, vague sourcing, headline-body mismatches, and one-sided framing. Green signals highlight good journalistic practice. Amber and red flag areas worth scrutinising.
-- **Source Cross-Reference** — extracts the core topic and searches NewsAPI for other outlets covering the same story, showing how widely a claim is being reported.
-- **Critical Summary** — plain-language breakdown of what the article is actually claiming, what it leaves out, and questions worth asking before sharing.
+- **Credibility Signals** : flags emotional language, vague sourcing, headline-body mismatches, and one-sided framing. Green signals highlight good journalistic practice. Amber and red flag areas worth scrutinising.
+- **Source Cross-Reference** : extracts the core topic and searches NewsAPI for other outlets covering the same story, showing how widely a claim is being reported.
+- **Critical Summary** : plain-language breakdown of what the article is actually claiming, what it leaves out, and questions worth asking before sharing.
 
 What it is not: a fact-checker, a bias detector, or a replacement for reading the article. It is a supplement to it.
 
@@ -70,18 +70,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Known limitations
 
-- **URL extraction is not supported.** Many news sites block server-side scraping. Paste the article text directly — this is the intended flow.
+- **URL extraction is not supported.** Many news sites block server-side scraping. Paste the article text directly, this is the intended flow.
 - **NewsAPI free tier is development-only** by their terms of service. Sufficient for portfolio demonstration.
-- **No persistent storage.** Analysis results are not saved. Every session starts fresh — a deliberate choice to avoid data handling concerns.
+- **No persistent storage.** Analysis results are not saved. Every session starts fresh, a deliberate choice to avoid data handling concerns.
 - **Gemini analysis quality varies** on short articles and opinion pieces.
 
 ---
 
 ## Prompt engineering
 
-The Gemini prompt is structured to return strict JSON only — no markdown, no preamble. The response is stripped of any markdown fences, parsed, and shape-validated before it reaches the UI. If any required field is missing, the route returns a structured error rather than crashing.
+The Gemini prompt is structured to return strict JSON only. No markdown, no preamble. The response is stripped of any markdown fences, parsed, and shape-validated before it reaches the UI. If any required field is missing, the route returns a structured error rather than crashing.
 
-The prompt instructs the model to be selective — 2 to 4 credibility signals is the target. It explicitly avoids flagging easily verifiable factual claims or routine journalistic language, which would make the tool feel paranoid rather than useful.
+The prompt instructs the model to be selective : 2 to 5 credibility signals is the target. It explicitly avoids flagging easily verifiable factual claims or routine journalistic language, which would make the tool feel paranoid rather than useful.
 
 ---
 
