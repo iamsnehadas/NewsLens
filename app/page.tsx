@@ -34,7 +34,7 @@ export default async function Home() {
         {/* Input block */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 mb-10">
           <h2 className="text-sm font-semibold text-gray-700 mb-3">
-            Paste an article URL or text to analyse
+            Paste an article text to analyse
           </h2>
           <HomeInput />
         </div>
