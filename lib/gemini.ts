@@ -40,6 +40,10 @@ function validateGeminiResponse(parsed: unknown): parsed is GeminiAnalysisRespon
   return true
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export async function analyseArticle(articleText: string): Promise<GeminiAnalysisResponse> {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 30000)
@@ -55,6 +59,47 @@ export async function analyseArticle(articleText: string): Promise<GeminiAnalysi
         generationConfig: { responseMimeType: 'application/json' },
       }),
     })
+
+    if (response.status === 503) {
+      // Gemini overloaded : wait 3 seconds and retry once
+      await sleep(3000)
+
+      const retry = await fetch(`${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+          contents: [{ parts: [{ text: buildPrompt(articleText) }] }],
+          generationConfig: { responseMimeType: 'application/json' },
+        }),
+      })
+
+      if (retry.status === 503) {
+        // Both Gemini attempts failed : throw specific error to trigger fallback
+        throw new Error('GEMINI_503')
+      }
+
+      if (!retry.ok) {
+        throw new Error(`Gemini API error: ${retry.status}`)
+      }
+
+      const retryJson = await retry.json()
+      const retryRaw: string = retryJson.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+      const retryCleaned = stripMarkdownFences(retryRaw)
+
+      let retryParsed: unknown
+      try {
+        retryParsed = JSON.parse(retryCleaned)
+      } catch {
+        throw new Error('Gemini retry response could not be parsed as JSON')
+      }
+
+      if (!validateGeminiResponse(retryParsed)) {
+        throw new Error('Gemini retry response is missing required fields')
+      }
+
+      return retryParsed
+    }
 
     if (!response.ok) {
       throw new Error(`Gemini API error: ${response.status}`)
